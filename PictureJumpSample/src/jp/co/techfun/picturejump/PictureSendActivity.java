@@ -145,12 +145,7 @@ public class PictureSendActivity extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				// 　画像をメールに添付して送信処理
-				try {
-					mailto();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+				mailto();
 			}
 		});
 
@@ -240,9 +235,9 @@ public class PictureSendActivity extends Activity {
 	}
 
 	// メールに添付して送信処理
-	private void mailto() throws IOException {
+	private void mailto() {
 		// 画像をSDカードへ保存
-		String imgPath = savePicture();
+		String imgPath = savePictureInSDcard();
 		// メール送信処理インテント
 		Intent intent = new Intent();
 		intent.setAction(Intent.ACTION_SEND);
@@ -251,9 +246,9 @@ public class PictureSendActivity extends Activity {
 		startActivity(intent);
 	}
 	
-	private String savePicture() throws IOException{
+	private String savePictureInSDcard() {
 		// SDカードのルートディレクトリ取得
-		File dir = Environment.getExternalStorageDirectory();
+		String dir = Environment.getExternalStorageDirectory().getAbsolutePath();
 		File baseDir = new File(dir, "picture_send");
 		baseDir.mkdirs();
 		// 画像パス(日付形式)
@@ -261,6 +256,7 @@ public class PictureSendActivity extends Activity {
 		SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd_HHmmss");
 		String imgPath = baseDir + File.separator + format.format(cal.getTime()) + ".png";
 		//画像をバイト型に変換
+		try{
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
 		picture.compress(CompressFormat.PNG, 100, os);
 		os.flush();
@@ -270,6 +266,9 @@ public class PictureSendActivity extends Activity {
 		FileOutputStream out = new FileOutputStream(imgPath);
 		out.write(w,0,w.length);
 		out.flush();
+		}catch(Exception e){
+			Log.e("error", "image error");
+		}
 		
 		return imgPath;
 	}
