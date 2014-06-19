@@ -242,7 +242,7 @@ public class PictureSendActivity extends Activity {
 		Intent intent = new Intent();
 		intent.setAction(Intent.ACTION_SEND);
 		intent.setType("image/png");
-		intent.putExtra(Intent.EXTRA_STREAM, Uri.parse(imgPath));
+		intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(new File(imgPath)));
 		startActivity(intent);
 	}
 	
